@@ -1,15 +1,15 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-// Configura la conexión a PostgreSQL usando la URL externa de Render con SSL habilitado
-const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant', {
+// Configuración de la conexión a PostgreSQL
+const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p', {
   dialect: 'postgres',
   dialectOptions: {
     ssl: {
-      require: true, // Establece que SSL es necesario
-      rejectUnauthorized: false, // Permite conexiones sin verificar el certificado
+      require: true,
+      rejectUnauthorized: false,
     },
   },
-  logging: false, // Desactiva los logs de consultas (opcional)
+  logging: false, // Desactiva el registro de consultas, opcional
 });
 
 // Definir el modelo de Pedido
@@ -27,26 +27,30 @@ const Pedido = sequelize.define('Pedido', {
     type: DataTypes.STRING,
     defaultValue: 'pendiente',
   },
-  imagen: { // Campo para la URL de la imagen del plato
-    type: DataTypes.STRING, // Almacena la URL de la imagen
-    allowNull: true, // Puede ser opcional
+  imagen: {
+    type: DataTypes.STRING, // URL de la imagen
+    allowNull: true,
   },
-  precio: { // Campo para el precio del plato
-    type: DataTypes.FLOAT, // Usamos float para precios decimales
-    allowNull: false, // No debería ser nulo
-  }
+  precio: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
 }, {
-  timestamps: false, // Si no necesitas las columnas de timestamps
+  timestamps: false, // Si no necesitas las columnas `createdAt` y `updatedAt`
 });
 
-// Conectar a la base de datos y sincronizarla
+// Conectar y sincronizar la base de datos
 (async () => {
   try {
+    // Conectar a la base de datos
     await sequelize.authenticate();
-    console.log('Conexión a la base de datos PostgreSQL establecida con éxito.');
-    await sequelize.sync(); // Esto crea la tabla si no existe
+    console.log('Conexión a la base de datos establecida con éxito.');
+
+    // Sincronizar el modelo con la base de datos (esto crea la tabla si no existe)
+    await sequelize.sync(); 
+    console.log('Tablas sincronizadas correctamente.');
   } catch (error) {
-    console.error('No se pudo conectar a la base de datos:', error);
+    console.error('Error al conectar o sincronizar la base de datos:', error);
   }
 })();
 
