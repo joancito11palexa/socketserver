@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketServer(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*", // Permitir cualquier origen (o especifica tu dominio)
     methods: ["GET", "POST"],
   },
 });
@@ -16,13 +16,11 @@ let pedidos = []; // Lista de pedidos en memoria
 io.on("connection", (socket) => {
   console.log("Client connected");
 
-  // Enviar pedidos existentes al cliente que se conecta
   socket.emit("pedidos-actualizados", pedidos);
 
-  // Recibir un nuevo pedido de la mesera
   socket.on("nuevo-pedido", (pedido) => {
     pedidos.push(pedido);
-    io.emit("pedidos-actualizados", pedidos); // Notificar a todos los clientes
+    io.emit("pedidos-actualizados", pedidos);
   });
 
   socket.on("disconnect", () => {
@@ -30,6 +28,8 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(4000, () => {
-  console.log("Server running on http://localhost:4000");
+// Render proporciona el puerto en process.env.PORT
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
