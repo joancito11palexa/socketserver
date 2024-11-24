@@ -3,35 +3,62 @@ import http from "http";
 import { Server as SocketServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
+import { Pedido } from './db'; // Importamos el modelo de la base de datos
 
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(morgan("dev"));
 
-// Servidor HTTP y WebSocket
 const server = http.createServer(app);
-const io = new SocketServer(server, {
-  cors: {
-    origin: "*", // Permite todas las conexiones en desarrollo/producción
-  },
-});
+const io = new SocketServer(server);
 
-// Almacén de pedidos en memoria
-let pedidos = [];
+let pedidosEntregados = 0; // Contador de pedidos entregados
 
-// Configuración de eventos de Socket.IO
+// Función para obtener el total de ganancias
+const calcularGanancias = () => {
+  return pedidosEntregados * 10; // Aquí puedes cambiar el precio de cada plato
+};
+
+// Recuperar pedidos de la base de datos
+const obtenerPedidos = async () => {
+  return await Pedido.findAll();
+};
+
+// Manejo de los eventos de Socket.IO
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
 
-  // Enviar los pedidos existentes al cliente
-  socket.emit("pedidos-actualizados", pedidos);
+  // Enviar los pedidos actuales desde la base de datos al cliente
+  obtenerPedidos().then((pedidos) => {
+    socket.emit("pedidos-actualizados", pedidos);
+  });
+  socket.emit("ganancias-actualizadas", calcularGanancias());
 
-  // Manejar nuevos pedidos
-  socket.on("nuevo-pedido", (pedido) => {
-    pedidos.push(pedido);
-    io.emit("pedidos-actualizados", pedidos); // Enviar a todos los clientes
+  // Recibir nuevo pedido y guardarlo en la base de datos
+  socket.on("nuevo-pedido", async (plato) => {
+    const nuevoPedido = await Pedido.create({ plato, estado: "pendiente" });
+    const pedidos = await obtenerPedidos();
+    io.emit("pedidos-actualizados", pedidos);
+  });
+
+  // Eliminar un pedido de la base de datos
+  socket.on("eliminar-pedido", async (id) => {
+    await Pedido.destroy({ where: { id } });
+    const pedidos = await obtenerPedidos();
+    io.emit("pedidos-actualizados", pedidos);
+  });
+
+  // Marcar un pedido como entregado
+  socket.on("marcar-entregado", async (id) => {
+    const pedido = await Pedido.findByPk(id);
+    if (pedido && pedido.estado !== "entregado") {
+      pedido.estado = "entregado";
+      await pedido.save();
+      pedidosEntregados++;
+      const pedidos = await obtenerPedidos();
+      io.emit("pedidos-actualizados", pedidos);
+      io.emit("ganancias-actualizadas", calcularGanancias());
+    }
   });
 
   socket.on("disconnect", () => {
@@ -39,7 +66,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Usar el puerto proporcionado por Render o un puerto local
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
