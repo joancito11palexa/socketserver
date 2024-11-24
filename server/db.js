@@ -1,13 +1,9 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-// Configura la conexión a PostgreSQL
-const sequelize = new Sequelize({
+// Configura la conexión a PostgreSQL usando la URL externa de Render
+const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p', {
   dialect: 'postgres',
-  host: 'dpg-ct1qvra3esus73d2hd1g-a', // Si usas una base de datos en la nube, cambia esto por la URL del host
-  port: 5432, // Puerto por defecto de PostgreSQL
-  username: 'restaurant_4q7p_user', // Tu usuario de PostgreSQL
-  password: 'o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8', // Tu contraseña de PostgreSQL
-  database: 'restaurant_4q7p', // Nombre de la base de datos
+  logging: false, // Desactivar el logging para no mostrar las consultas en consola (opcional)
 });
 
 // Definir el modelo de Pedido
@@ -25,8 +21,16 @@ const Pedido = sequelize.define('Pedido', {
     type: DataTypes.STRING,
     defaultValue: 'pendiente',
   },
+  imagen: { // Campo para la URL de la imagen del plato
+    type: DataTypes.STRING, // Almacena la URL de la imagen
+    allowNull: true, // Puede ser opcional
+  },
+  precio: { // Campo para el precio del plato
+    type: DataTypes.FLOAT, // Usamos float para precios decimales
+    allowNull: false, // No debería ser nulo
+  }
 }, {
-  timestamps: false,
+  timestamps: false, // Si no necesitas las columnas de timestamps
 });
 
 // Conectar a la base de datos y sincronizarla

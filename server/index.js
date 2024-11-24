@@ -35,12 +35,12 @@ io.on("connection", (socket) => {
   socket.emit("ganancias-actualizadas", calcularGanancias());
 
   // Recibir nuevo pedido y guardarlo en la base de datos
-  socket.on("nuevo-pedido", async (plato) => {
-    const nuevoPedido = await Pedido.create({ plato, estado: "pendiente" });
+  socket.on("nuevo-pedido", async (plato, imagen, precio) => {
+    const nuevoPedido = await Pedido.create({ plato, imagen, precio, estado: "pendiente" });
     const pedidos = await obtenerPedidos();
     io.emit("pedidos-actualizados", pedidos);
   });
-
+  
   // Eliminar un pedido de la base de datos
   socket.on("eliminar-pedido", async (id) => {
     await Pedido.destroy({ where: { id } });
