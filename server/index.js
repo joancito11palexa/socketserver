@@ -3,21 +3,21 @@ import http from "http";
 import { Server as SocketServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
-import { Sequelize, DataTypes } from "sequelize"; // Asegúrate de tener Sequelize importado
+import { Sequelize, DataTypes } from "sequelize";
 import { Pedido } from './db.js'; // Asegúrate de que tu modelo esté bien importado
 
 const app = express();
 
-// Configura CORS
+// Configura CORS para Express
 const corsOptions = {
-    origin: "*",
+    origin: "*",  // Permite solicitudes desde cualquier origen (en producción, restringir esto)
     methods: ["GET", "POST"],
     credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
 
-// Configuración de la base de datos (Asegúrate de que db.js esté configurado correctamente)
+// Configuración de la base de datos
 const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p', {
     dialect: 'postgres',
     dialectOptions: {
@@ -29,14 +29,22 @@ const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG
 });
 
 const server = http.createServer(app);
-const io = new SocketServer(server);
+
+// Configura CORS para Socket.IO
+const io = new SocketServer(server, {
+    cors: {
+        origin: "http://localhost:5173", // Ajusta esto a tu URL frontend en producción
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
 
 // Contador de pedidos entregados
 let pedidosEntregados = 0;
 
 // Función para obtener el total de ganancias
 const calcularGanancias = () => {
-    return pedidosEntregados * 10; // Suponiendo que cada pedido tiene un precio de 10, puedes ajustarlo
+    return pedidosEntregados * 10; // Cambia el valor según el precio real de los pedidos
 };
 
 // Recuperar pedidos de la base de datos
