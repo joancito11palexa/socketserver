@@ -1,9 +1,15 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-// Configura la conexión a PostgreSQL usando la URL externa de Render
+// Configura la conexión a PostgreSQL usando la URL externa de Render con SSL habilitado
 const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p', {
   dialect: 'postgres',
-  logging: false, // Desactivar el logging para no mostrar las consultas en consola (opcional)
+  dialectOptions: {
+    ssl: {
+      require: true, // Establece que SSL es necesario
+      rejectUnauthorized: false, // Permite conexiones a bases de datos con certificados no verificados (esto es común en servicios como Render)
+    },
+  },
+  logging: false, // Desactiva los logs de consultas (opcional)
 });
 
 // Definir el modelo de Pedido
