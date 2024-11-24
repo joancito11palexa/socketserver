@@ -3,7 +3,7 @@ import http from "http";
 import { Server as SocketServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
-import { Pedido } from './db'; // Importamos el modelo de la base de datos
+import { Pedido } from './db.js'; // Importamos el modelo de la base de datos
 
 const app = express();
 app.use(cors());
