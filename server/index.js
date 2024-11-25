@@ -83,30 +83,32 @@ io.on("connection", (socket) => {
     // Eliminar un pedido de la base de datos
     socket.on("eliminar-pedido", async (id) => {
         try {
-            await Pedido.destroy({ where: { id } });
-            const pedidos = await obtenerPedidos();
-            io.emit("pedidos-actualizados", pedidos);
+            await Pedido.destroy({ where: { id } }); // Elimina el pedido por ID
+            const pedidos = await obtenerPedidos(); // Actualiza la lista de pedidos
+            io.emit("pedidos-actualizados", pedidos); // Notifica a todos los clientes
         } catch (error) {
             console.error("Error al eliminar pedido:", error);
         }
     });
 
+
     // Marcar un pedido como entregado
     socket.on("marcar-entregado", async (id) => {
         try {
-            const pedido = await Pedido.findByPk(id);
+            const pedido = await Pedido.findByPk(id); // Busca el pedido por ID
             if (pedido && pedido.estado !== "entregado") {
-                pedido.estado = "entregado";
-                await pedido.save();
-                pedidosEntregados++;
-                const pedidos = await obtenerPedidos();
-                io.emit("pedidos-actualizados", pedidos);
-                io.emit("ganancias-actualizadas", calcularGanancias());
+                pedido.estado = "entregado"; // Cambia el estado
+                await pedido.save(); // Guarda el cambio en la base de datos
+                pedidosEntregados++; // Incrementa el contador de entregados
+                const pedidos = await obtenerPedidos(); // Actualiza la lista de pedidos
+                io.emit("pedidos-actualizados", pedidos); // Notifica a los clientes
+                io.emit("ganancias-actualizadas", calcularGanancias()); // Notifica ganancias
             }
         } catch (error) {
             console.error("Error al marcar como entregado:", error);
         }
     });
+    
 
     socket.on("disconnect", () => {
         console.log("Cliente desconectado");
