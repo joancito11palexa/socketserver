@@ -50,6 +50,13 @@ const Plato = sequelize.define("Plato", {
     type: DataTypes.STRING, // URL de la imagen del plato
     allowNull: true,
   },
+  tipo: {
+    type: DataTypes.ENUM,
+    values: ['entrada', 'platoPrincipal'], // Se definen los valores posibles
+    allowNull: false, // No permite valores nulos
+  },
+}, {
+  timestamps: false, // Si no necesitas las columnas `createdAt` y `updatedAt`
 });
 
 // Conectar y sincronizar la base de datos
