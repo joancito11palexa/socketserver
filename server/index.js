@@ -4,7 +4,7 @@ import { Server as SocketServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
 import { Sequelize, DataTypes } from "sequelize";
-import { Pedido } from './db.js'; // Asegúrate de que tu modelo esté bien importado
+import { Pedido, Plato } from './db.js'; // Asegúrate de que tu modelo esté bien importado
 
 const app = express();
 
@@ -57,6 +57,16 @@ const obtenerPedidos = async () => {
     }
 };
 
+// Recuperar platos disponibles desde la base de datos
+const obtenerPlatos = async () => {
+    try {
+        const platos = await Plato.findAll();
+        return platos;
+    } catch (error) {
+        console.error("Error al obtener platos:", error);
+    }
+};
+
 // Manejo de los eventos de Socket.IO
 io.on("connection", (socket) => {
     console.log("Cliente conectado");
@@ -64,6 +74,11 @@ io.on("connection", (socket) => {
     // Enviar los pedidos actuales desde la base de datos al cliente
     obtenerPedidos().then((pedidos) => {
         socket.emit("pedidos-actualizados", pedidos);
+    });
+
+    // Enviar los platos disponibles desde la base de datos al cliente
+    obtenerPlatos().then((platos) => {
+        socket.emit("platos-actualizados", platos);
     });
 
     // Enviar las ganancias actualizadas al cliente
@@ -91,7 +106,6 @@ io.on("connection", (socket) => {
         }
     });
 
-
     // Marcar un pedido como entregado
     socket.on("marcar-entregado", async (id) => {
         try {
@@ -108,7 +122,34 @@ io.on("connection", (socket) => {
             console.error("Error al marcar como entregado:", error);
         }
     });
-    
+
+    // Recibir la solicitud de crear un plato
+    socket.on("crear-plato", async (nuevoPlato) => {
+        try {
+            const platoCreado = await Plato.create(nuevoPlato);
+            console.log("Nuevo plato creado:", platoCreado);
+
+            // Enviar la lista actualizada de platos al cliente
+            const platos = await obtenerPlatos();
+            io.emit("platos-actualizados", platos);
+        } catch (error) {
+            console.error("Error al crear plato:", error);
+        }
+    });
+
+    // Eliminar un plato
+    socket.on("eliminar-plato", async (id) => {
+        try {
+            await Plato.destroy({ where: { id } });
+            console.log("Plato eliminado:", id);
+
+            // Enviar la lista actualizada de platos al cliente
+            const platos = await obtenerPlatos();
+            io.emit("platos-actualizados", platos);
+        } catch (error) {
+            console.error("Error al eliminar plato:", error);
+        }
+    });
 
     socket.on("disconnect", () => {
         console.log("Cliente desconectado");

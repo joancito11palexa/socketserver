@@ -1,6 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-// Configuración de la conexión a PostgreSQL
 const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p', {
   dialect: 'postgres',
   dialectOptions: {
@@ -12,7 +11,6 @@ const sequelize = new Sequelize('postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG
   logging: false, // Desactiva el registro de consultas, opcional
 });
 
-// Definir el modelo de Pedido
 const Pedido = sequelize.define('Pedido', {
   id: {
     type: DataTypes.INTEGER,
@@ -39,6 +37,21 @@ const Pedido = sequelize.define('Pedido', {
   timestamps: false, // Si no necesitas las columnas `createdAt` y `updatedAt`
 });
 
+const Plato = sequelize.define("Plato", {
+  nombre: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  precio: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  imagen: {
+    type: DataTypes.STRING, // URL de la imagen del plato
+    allowNull: true,
+  },
+});
+
 // Conectar y sincronizar la base de datos
 (async () => {
   try {
@@ -46,12 +59,12 @@ const Pedido = sequelize.define('Pedido', {
     await sequelize.authenticate();
     console.log('Conexión a la base de datos establecida con éxito.');
 
-    // Sincronizar el modelo con la base de datos (esto crea la tabla si no existe)
-    await sequelize.sync(); 
+    // Sincronizar los modelos con la base de datos (force: true elimina las tablas existentes)
+    await sequelize.sync({ force: false});
     console.log('Tablas sincronizadas correctamente.');
   } catch (error) {
     console.error('Error al conectar o sincronizar la base de datos:', error);
   }
 })();
 
-export { Pedido };
+export { Pedido, Plato };
