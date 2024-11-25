@@ -67,7 +67,7 @@ const Plato = sequelize.define("Plato", {
     console.log('Conexión a la base de datos establecida con éxito.');
 
     // Sincronizar los modelos con la base de datos (force: true elimina las tablas existentes)
-    await sequelize.sync({ force: false});
+    await sequelize.sync({ force: true});
     console.log('Tablas sincronizadas correctamente.');
   } catch (error) {
     console.error('Error al conectar o sincronizar la base de datos:', error);
