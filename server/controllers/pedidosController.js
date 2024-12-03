@@ -1,4 +1,4 @@
-import { Pedido } from '../models/index.js';
+import { Pedido } from "../models/index.js";
 
 export const obtenerPedidos = async () => {
   try {
@@ -8,14 +8,35 @@ export const obtenerPedidos = async () => {
   }
 };
 
-export const crearPedido = async (plato, imagen, precio) => {
+export const crearPedido = async (descripcion) => {
   try {
-    return await Pedido.create({ plato, imagen, precio, estado: 'pendiente' });
+    // Calcular el total
+    const total =
+      // Sumar todos los platos principales
+      descripcion.platoPrincipal.reduce(
+        (acc, plato) => acc + plato.precio * plato.cantidad,
+        0
+      ) +
+      // Sumar todas las entradas
+      descripcion.entradas.reduce(
+        (acc, entrada) => acc + entrada.precio * entrada.cantidad,
+        0
+      );
+
+    // Crear el pedido
+    const nuevoPedido = await Pedido.create({
+      descripcion, // Guardamos la descripción completa
+      total, // El total calculado
+    });
+
+    console.log(descripcion); // Verifica la descripción
+    console.log(nuevoPedido); // Verifica el objeto pedido creado
+    return nuevoPedido;
   } catch (error) {
-    console.error("Error al crear nuevo pedido:", error);
+    console.error("Error creando el pedido:", error);
+    throw error;
   }
 };
-
 export const eliminarPedido = async (id) => {
   try {
     await Pedido.destroy({ where: { id } });
