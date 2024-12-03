@@ -12,7 +12,10 @@ const server = http.createServer(app);
 
 // Configura CORS para Express
 const corsOptions = {
-  origin: "https://restaurantproject1632.netlify.app", // Reemplaza con tu dominio real
+  origin: [
+    "https://restaurantproject1632.netlify.app", // Dominio de producción
+    "http://localhost:5173", // Dominio de desarrollo (Vite)
+  ],
   methods: ["GET", "POST"],
   credentials: true,
 };
@@ -24,7 +27,10 @@ app.use(morgan("dev"));
 // Configuración de Socket.IO
 const io = new SocketServer(server, {
   cors: {
-    origin: "https://restaurantproject1632.netlify.app", // Aquí tu dominio de producción
+    origin: [
+      "https://restaurantproject1632.netlify.app", // Dominio de producción
+      "http://localhost:5173", // Dominio de desarrollo (Vite)
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
