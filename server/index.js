@@ -12,10 +12,11 @@ const server = http.createServer(app);
 
 // Configura CORS para Express
 const corsOptions = {
-  origin: "*",
+  origin: "https://restaurantproject1632.netlify.app", // Reemplaza con tu dominio real
   methods: ["GET", "POST"],
   credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
@@ -23,11 +24,12 @@ app.use(morgan("dev"));
 // Configuración de Socket.IO
 const io = new SocketServer(server, {
   cors: {
-    origin: "*",
+    origin: "https://restaurantproject1632.netlify.app", // Aquí tu dominio de producción
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
+
 
 // Conexión a la base de datos y consulta de tablas
 sequelize
