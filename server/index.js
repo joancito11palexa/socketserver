@@ -7,6 +7,14 @@ import sequelize from "./config/db.js"; // Importar sequelize para la conexión 
 import { conectarPedidosSocket } from "./sockets/pedidosSocket.js";
 import { conectarPlatosSocket } from "./sockets/platosSocket.js";
 import * as cheerio from "cheerio";
+import fetch from "node-fetch";
+import fs from 'fs';
+import { fileURLToPath } from "url";
+import path from "path";
+
+// Obtener el directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());  // Para poder trabajar con req.body
@@ -64,39 +72,23 @@ conectarPedidosSocket(io);
 // Establecer conexión para los eventos de socket relacionados con los platos
 conectarPlatosSocket(io);
 
-import fetch from "node-fetch";
 
-// Ruta para obtener la lista de productos
+
+
 app.get("/obtener-lista-productos", async (req, res) => {
   try {
-    // Realizamos la solicitud GET al servidor externo
-    const response = await fetch(
-      "http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/generos/filtrarPorMercado#"
-    );
-
-    if (!response.ok) {
-      throw new Error("Error al obtener la página de productos.");
-    }
-    const html = await response.text();
-    const $ = cheerio.load(html);
-
-    const productos = [];
-    $("#productosCheckBox li").each((index, li) => {
-      const input = $(li).find("input");
-      const label = $(li).find("label");
-      if (input.length && label.length) {
-        const value = input.val();
-        const nombre = label.text().trim();
-        productos.push({ value, nombre });
-      }
-    });
-
+    const jsonPath = path.join(__dirname, "../data/sisap.json");
+    console.log(jsonPath)
+    const data = fs.readFileSync(jsonPath, "utf8");
+    const productos = JSON.parse(data);
     res.json(productos);
   } catch (error) {
     console.error("Error al obtener la lista de productos:", error);
     res.status(500).json({ error: "Error al obtener la lista de productos." });
   }
 });
+
+
 
 app.post("/obtener-precio", async (req, res) => {
   try {
