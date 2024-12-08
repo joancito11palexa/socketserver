@@ -43,10 +43,12 @@ export const obtenerPrecio = async (req, res) => {
       __ajax_carga_final: "consulta",
       ajax: "true",
     });
+
     productosSeleccionados.forEach((producto) => {
       bodyData.append("productos[]", producto);
     });
-
+    console.log("bodyDataAAAAAAAAAAAAAAAA");
+    console.log(bodyData)
     const response = await fetch("http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/resumenes/filtrar", {
       method: "POST",
       headers: {
