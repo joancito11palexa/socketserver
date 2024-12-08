@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "nodemon server/index.js",
     "start": "node server/index.js",
-    "acp": "git add . && git commit -m \"Auto commit $(date +'%Y-%m-%d %H:%M:%S')\" && git push origin main"
+    "acp": "git add . && git commit -m \"Auto commit $(node -e \\\"console.log(new Date().toISOString())\\\")\" && git push origin main"
   },
   "keywords": [],
   "author": "",

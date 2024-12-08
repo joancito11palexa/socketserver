@@ -62,7 +62,7 @@ export const obtenerPrecio = async (req, res) => {
       },
       body: bodyData.toString(),
     });
-    
+    console.log("-------------------RESPUESTAAA-----------------: ")
     console.log(response)
 
     if (!response.ok) {
