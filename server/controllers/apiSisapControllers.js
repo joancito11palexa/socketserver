@@ -49,19 +49,18 @@ export const obtenerPrecio = async (req, res) => {
     });
     console.log("bodyDataAAAAAAAAAAAAAAAA");
     console.log(bodyData)
-    const response = await fetch("http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/resumenes/filtrar", {
-      method: "POST",
-      headers: {
-        "accept": "*/*",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/x-www-form-urlencoded",
-        "x-requested-with": "XMLHttpRequest",
-        "referer": "http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/",
-        "cookie": "__utmz=...; autentificator=...;", // Copia las cookies relevantes
-      },
-      body: bodyData.toString(),
-    });
+    const response = await fetch(
+      "http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/resumenes/filtrar",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: bodyData.toString(),
+      }
+    );
+    
     console.log("-------------------RESPUESTAAA-----------------: ")
     console.log(response)
 
