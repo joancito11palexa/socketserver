@@ -23,6 +23,7 @@ export const obtenerListaProductos = (req, res) => {
 
 
 export const obtenerPrecio = async (req, res) => {
+  console.log(req)
   try {
     const productosSeleccionados = req.body.productosSeleccionados; // Lista de IDs de productos
 
