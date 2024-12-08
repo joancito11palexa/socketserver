@@ -17,7 +17,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server/index.js",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "acp": "git add . && git commit -m \"Auto commit $(date +'%Y-%m-%d %H:%M:%S')\" && git push origin main"
   },
   "keywords": [],
   "author": "",

@@ -63,6 +63,7 @@ export const obtenerPrecio = async (req, res) => {
       body: bodyData.toString(),
     });
     
+    console.log(response)
 
     if (!response.ok) {
       throw new Error("Error al obtener datos del servidor externo.");
