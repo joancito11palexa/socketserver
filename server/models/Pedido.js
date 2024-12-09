@@ -1,7 +1,9 @@
+// models/Pedido.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import { Cliente } from "./Cliente.js"; // Importamos el modelo Cliente
 
-const Pedido = sequelize.define(
+export const Pedido = sequelize.define(
   "Pedido",
   {
     id: {
@@ -10,7 +12,7 @@ const Pedido = sequelize.define(
       autoIncrement: true,
     },
     descripcion: {
-      type: DataTypes.JSON, // Guardará la descripción como un objeto JSON
+      type: DataTypes.JSON,
       allowNull: false,
     },
     estado: {
@@ -23,7 +25,16 @@ const Pedido = sequelize.define(
     },
     fecha: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Guarda automáticamente la fecha de creación
+      defaultValue: DataTypes.NOW,
+    },
+    clienteId: {
+      // Añadimos la relación con Cliente
+      type: DataTypes.INTEGER,
+      references: {
+        model: Cliente,
+        key: "id",
+      },
+      allowNull: false,
     },
   },
   {
@@ -31,4 +42,5 @@ const Pedido = sequelize.define(
   }
 );
 
-export default Pedido;
+// Establecer la relación: un Pedido pertenece a un Cliente
+Pedido.belongsTo(Cliente, { foreignKey: "clienteId" });

@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from '../config/db.js'; // Importamos sequelize desde la configuración
 
-const Plato = sequelize.define('Plato', {
+export const Plato = sequelize.define('Plato', {
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,4 +23,3 @@ const Plato = sequelize.define('Plato', {
   timestamps: false, // No generar columnas `createdAt` y `updatedAt`
 });
 
-export default Plato;

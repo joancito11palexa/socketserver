@@ -8,7 +8,7 @@ export const obtenerPedidos = async () => {
   }
 };
 
-export const crearPedido = async (descripcion) => {
+export const crearPedido = async (descripcion, clienteId) => {
   try {
     // Calcular el total
     const total =
@@ -23,10 +23,11 @@ export const crearPedido = async (descripcion) => {
         0
       );
 
-    // Crear el pedido
+    // Crear el pedido y asociarlo con un cliente específico
     const nuevoPedido = await Pedido.create({
       descripcion, // Guardamos la descripción completa
       total, // El total calculado
+      clienteId, // Asociamos el pedido al cliente proporcionado
     });
 
     console.log(descripcion); // Verifica la descripción
@@ -37,6 +38,7 @@ export const crearPedido = async (descripcion) => {
     throw error;
   }
 };
+
 export const eliminarPedido = async (id) => {
   try {
     await Pedido.destroy({ where: { id } });
