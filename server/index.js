@@ -7,6 +7,7 @@ import sequelize from "./config/db.js"; // Importar sequelize para la conexión 
 import { conectarPedidosSocket } from "./sockets/pedidosSocket.js";
 import { conectarPlatosSocket } from "./sockets/platosSocket.js";
 import apiSisapRoute from "./routes/apiSisapRoutes.js";
+import clienteRoutes from "./routes/clienteRoutes.js";
 import { Cliente } from "./models/Cliente.js"; // Asegúrate de importar el modelo Cliente
 
 const app = express();
@@ -47,9 +48,9 @@ sequelize
       // Crear el cliente por defecto si no existe
       await Cliente.create({
         id: 2004,
-        nombre: "Cliente Default", // Puedes personalizar el nombre u otros campos según lo necesites
-        email: "default@example.com", // Asegúrate de proporcionar un email por defecto
-        // Otros campos del cliente si es necesario
+        nombre: "Cliente Default",
+        email: "default@example.com",
+        password: "123456",
       });
       console.log("Cliente default creado con id 2004.");
     } else {
@@ -59,7 +60,6 @@ sequelize
   .catch((err) => {
     console.error("Error al conectar a la base de datos:", err);
   });
-
 
 sequelize
   .sync({ force: false }) // Usar `force: true` borrará y recreará todas las tablas
@@ -73,7 +73,7 @@ sequelize
 conectarPedidosSocket(io);
 conectarPlatosSocket(io);
 
-app.use("/", apiSisapRoute);
+app.use("/api", clienteRoutes);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {

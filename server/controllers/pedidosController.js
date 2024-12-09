@@ -8,7 +8,8 @@ export const obtenerPedidos = async () => {
   }
 };
 
-export const crearPedido = async (descripcion, clienteId) => {
+export const crearPedido = async (descripcion) => {
+  const {clienteId} = descripcion
   try {
     // Calcular el total
     const total =
@@ -29,9 +30,6 @@ export const crearPedido = async (descripcion, clienteId) => {
       total, // El total calculado
       clienteId, // Asociamos el pedido al cliente proporcionado
     });
-
-    console.log(descripcion); // Verifica la descripción
-    console.log(nuevoPedido); // Verifica el objeto pedido creado
     return nuevoPedido;
   } catch (error) {
     console.error("Error creando el pedido:", error);

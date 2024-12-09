@@ -16,8 +16,10 @@ export const Cliente = sequelize.define("Cliente", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
   timestamps: false,  // No generamos los campos createdAt y updatedAt
 });
-
-
