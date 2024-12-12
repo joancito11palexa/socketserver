@@ -42,19 +42,30 @@ sequelize
   .then(async () => {
     console.log("Conexión establecida exitosamente.");
 
-    // Verificar si el cliente por defecto con id 2004 existe
     const clienteDefault = await Cliente.findByPk(2004);
+    const usuarioAdmin = await Cliente.findOne({ where: { esAdministrador: true } });
     if (!clienteDefault) {
-      // Crear el cliente por defecto si no existe
       await Cliente.create({
         id: 2004,
         nombre: "Cliente Default",
         email: "default@example.com",
         password: "123456",
       });
+
       console.log("Cliente default creado con id 2004.");
     } else {
       console.log("Cliente default ya existe.");
+    }
+    if (!usuarioAdmin) {
+      await Cliente.create({
+        nombre: "Administrador",
+        email: "admin@gmail.com",
+        password: "2004",
+        esAdministrador: true,
+      });
+      console.log("Usuario administrador creado.");
+    } else {
+      console.log("Usuario administrador ya existe.");
     }
   })
   .catch((err) => {

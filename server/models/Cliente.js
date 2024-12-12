@@ -20,6 +20,10 @@ export const Cliente = sequelize.define("Cliente", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  esAdministrador: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 }, {
   timestamps: false,  // No generamos los campos createdAt y updatedAt
 });
