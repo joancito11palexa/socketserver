@@ -15,19 +15,14 @@ export const crearCliente = async (req, res) => {
 };
 // Iniciar sesión (verificar usuario)
 export const iniciarSesion = async (req, res) => {
-  console.log("sodkfms")
   const { email, password } = req.body;
   console.log(email, password)
   try {
     const cliente = await Cliente.findOne({ where: { email } });
-    console.log("cliente")
-    console.log(cliente)
     if (cliente) {
       if (cliente.password === password) {
-        console.log("no pasadasd")
         res.status(200).json(cliente);
       } else {
-        console.log("onfisdfddddddddddddddd")
         res.status(401).json({ message: "Contraseña incorrecta" });
       }
     } else {
