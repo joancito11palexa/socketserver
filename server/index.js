@@ -18,6 +18,7 @@ const corsOptions = {
   origin: [
     "https://restaurantproject1632.netlify.app", // Dominio de producción
     "https://restaurantapp2004.onrender.com",
+    "http://192.168.0.109:5173",
     "http://localhost:5173", // Dominio de desarrollo (Vite)
   ],
   methods: ["GET", "POST"],
@@ -32,6 +33,7 @@ const io = new SocketServer(server, {
     origin: [
       "https://restaurantproject1632.netlify.app", // Dominio de producción
       "https://restaurantapp2004.onrender.com",
+      "http://192.168.0.109:5173",
       "http://localhost:5173", // Dominio de desarrollo (Vite)
     ],
     methods: ["GET", "POST"],
