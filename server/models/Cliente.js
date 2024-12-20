@@ -1,4 +1,3 @@
-// models/Cliente.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
@@ -23,6 +22,11 @@ export const Cliente = sequelize.define("Cliente", {
   esAdministrador: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
+  },
+  auth0Id: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
   },
 }, {
   timestamps: false,  // No generamos los campos createdAt y updatedAt

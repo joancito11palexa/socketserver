@@ -1,12 +1,25 @@
-import express from 'express';
-import { crearCliente, obtenerClientes, obtenerClientePorId, eliminarCliente, iniciarSesion } from '../controllers/clienteController.js';
+import express from "express";
+import {
+  crearOActualizarCliente,
+  obtenerClientes,
+  obtenerClienteAutenticado,
+  eliminarCliente,
+} from "../controllers/clienteController.js";
+import { checkJwt } from "../middlewares/auth0Middleware.js";
+import { checkAdmin } from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
-router.post('/clientes', crearCliente);  // Crear un cliente
-router.post('/login', iniciarSesion);
-router.get('/clientes', obtenerClientes);  // Obtener todos los clientes
-router.get('/clientes/:id', obtenerClientePorId);  // Obtener un cliente por ID
-router.delete('/clientes/:id', eliminarCliente);  // Eliminar un cliente
+// Crear o actualizar cliente (autenticado)
+router.post("/clientes/auth0",checkJwt, crearOActualizarCliente);
+
+// Obtener todos los clientes (solo administradores)
+router.get("/clientes", obtenerClientes);
+
+// Obtener cliente autenticado
+router.get("/cliente", checkJwt, obtenerClienteAutenticado);
+
+// Eliminar cliente por ID (solo administradores)
+router.delete("/clientes/:id", checkJwt, checkAdmin, eliminarCliente);
 
 export default router;

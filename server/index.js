@@ -77,7 +77,7 @@ sequelize
   });
 
 sequelize
-  .sync({ force: false }) // Usar `force: true` borrará y recreará todas las tablas
+  .sync({ force: false}) // Usar `force: true` borrará y recreará todas las tablas
   .then(() => {
     console.log("Tablas sincronizadas correctamente (force: false).");
   })
