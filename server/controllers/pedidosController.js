@@ -2,16 +2,32 @@ import { Cliente, Pedido } from "../models/index.js";
 
 export const obtenerPedidos = async (req, res) => {
   try {
+    // Obtener todos los pedidos
     const pedidos = await Pedido.findAll({
-      order: [["fecha", "DESC"]], 
+      order: [["fecha", "DESC"]], // Opcional: ordenar por fecha de forma descendente
     });
+
+    // Verificar si hay pedidos
     if (!pedidos.length) {
       return res.status(404).json({ message: "No se encontraron pedidos." });
     }
+
+    // Devolver los pedidos
     return res.json(pedidos);
   } catch (error) {
     console.error("Error al obtener los pedidos:", error);
     return res.status(500).json({ message: "Error al obtener los pedidos." });
+  }
+};
+export const obtenerPedidosSocket = async () => {
+  try {
+    const pedidos = await Pedido.findAll({
+      order: [["fecha", "DESC"]],
+    });
+    return pedidos;
+  } catch (error) {
+    console.error("Error al obtener los pedidos:", error);
+    throw new Error("Error al obtener los pedidos");
   }
 };
 
