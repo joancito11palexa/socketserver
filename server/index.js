@@ -18,10 +18,11 @@ const server = http.createServer(app);
 
 const corsOptions = {
   origin: [
+    "http://localhost:5173", // Dominio de desarrollo (Vite)
     "https://restaurantproject1632.netlify.app", // Dominio de producción
     "https://restaurantapp2004.onrender.com",
     "http://192.168.0.109:5173",
-    "http://localhost:5173", // Dominio de desarrollo (Vite)
+
   ],
   methods: ["GET", "POST"],
   credentials: true,
@@ -33,10 +34,11 @@ app.use(morgan("dev"));
 const io = new SocketServer(server, {
   cors: {
     origin: [
+      "http://localhost:5173", // Dominio de desarrollo (Vite)
       "https://restaurantproject1632.netlify.app", // Dominio de producción
       "https://restaurantapp2004.onrender.com",
       "http://192.168.0.109:5173",
-      "http://localhost:5173", // Dominio de desarrollo (Vite)
+
     ],
     methods: ["GET", "POST"],
     credentials: true,
