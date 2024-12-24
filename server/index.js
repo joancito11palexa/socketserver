@@ -8,7 +8,9 @@ import { conectarPedidosSocket } from "./sockets/pedidosSocket.js";
 import { conectarPlatosSocket } from "./sockets/platosSocket.js";
 import apiSisapRoute from "./routes/apiSisapRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
+
 import { Cliente } from "./models/Cliente.js"; // Asegúrate de importar el modelo Cliente
+import routerPedidos from "./routes/pedidosRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -47,7 +49,9 @@ sequelize
     console.log("Conexión establecida exitosamente.");
 
     const clienteDefault = await Cliente.findByPk(2004);
-    const usuarioAdmin = await Cliente.findOne({ where: { esAdministrador: true } });
+    const usuarioAdmin = await Cliente.findOne({
+      where: { esAdministrador: true },
+    });
     if (!clienteDefault) {
       await Cliente.create({
         id: 2004,
@@ -77,7 +81,7 @@ sequelize
   });
 
 sequelize
-  .sync({ force: false}) // Usar `force: true` borrará y recreará todas las tablas
+  .sync({ force: false }) // Usar `force: true` borrará y recreará todas las tablas
   .then(() => {
     console.log("Tablas sincronizadas correctamente (force: false).");
   })
@@ -88,7 +92,8 @@ sequelize
 conectarPedidosSocket(io);
 conectarPlatosSocket(io);
 
-app.use("/api", clienteRoutes);
+app.use("/api", clienteRoutes, routerPedidos);
+
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {

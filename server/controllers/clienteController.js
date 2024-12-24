@@ -5,10 +5,16 @@ import axios from "axios";
 export const crearOActualizarCliente = async (req, res) => {
   const { auth } = req; // Información decodificada del token JWT
   const token = req.headers.authorization.split(" ")[1]; // Extraemos el token de la cabecera
+
   if (!auth) {
-    return res.status(401).json({ error: "No se encontró información de autenticación en la solicitud." });
+    return res.status(401).json({
+      error: "No se encontró información de autenticación en la solicitud.",
+    });
   }
+
   try {
+    const roles = auth["https://miappirest.com/roles"] || []; // Reemplaza con tu namespace
+    const esAdministrador = roles.includes("admin");
     const userInfoResponse = await axios.get(
       "https://dev-6tss1b7wf5huiury.us.auth0.com/userinfo",
       {
@@ -18,16 +24,18 @@ export const crearOActualizarCliente = async (req, res) => {
       }
     );
     const userInfo = userInfoResponse.data;
+
+
     let cliente = await Cliente.findOne({ where: { auth0Id: auth.sub } });
     if (!cliente) {
       cliente = await Cliente.create({
         nombre: userInfo.name || "Usuario", // Prioriza el nombre desde userInfo
         email: userInfo.email || "", // Prioriza el email desde userInfo
         password: "", // Campo vacío porque Auth0 maneja autenticación
-        esAdministrador: false,
+        esAdministrador: esAdministrador, // Asignar si es administrador
         auth0Id: auth.sub,
         nickname: userInfo.nickname || "", // Agregamos nickname del usuario
-        picture: userInfo.picture || "", // Foto de perfil del usuario
+        picture: userInfo.picture || "",
       });
     } else {
       // Actualizamos información existente del cliente si cambia en Auth0
@@ -35,10 +43,12 @@ export const crearOActualizarCliente = async (req, res) => {
       cliente.email = userInfo.email || cliente.email;
       cliente.nickname = userInfo.nickname || cliente.nickname;
       cliente.picture = userInfo.picture || cliente.picture;
+      cliente.esAdministrador = esAdministrador; // Actualizar el rol en base al token
       await cliente.save();
     }
 
     // Respondemos con los datos del cliente
+
     res.json({
       id: cliente.id,
       nombre: cliente.nombre,
@@ -52,7 +62,6 @@ export const crearOActualizarCliente = async (req, res) => {
     res.status(500).send("Error en el servidor");
   }
 };
-
 // Obtener todos los clientes (ruta protegida)
 export const obtenerClientes = async (req, res) => {
   try {
