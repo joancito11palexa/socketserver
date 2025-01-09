@@ -4,6 +4,7 @@ import {
   obtenerClientes,
   obtenerClienteAutenticado,
   eliminarCliente,
+  obtenerCliente,
 } from "../controllers/clienteController.js";
 import { checkJwt } from "../middlewares/auth0Middleware.js";
 import { checkAdmin } from "../middlewares/roleMiddleware.js";
@@ -11,8 +12,8 @@ import { checkAdmin } from "../middlewares/roleMiddleware.js";
 const router = express.Router();
 
 // Crear o actualizar cliente (autenticado)
-router.post("/clientes/auth0",checkJwt, crearOActualizarCliente);
-
+router.post("/clientes/auth0", checkJwt, crearOActualizarCliente);
+router.get("/cliente/:id", obtenerCliente);
 // Obtener todos los clientes (solo administradores)
 router.get("/clientes", obtenerClientes);
 

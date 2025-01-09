@@ -13,7 +13,7 @@ export const crearOActualizarCliente = async (req, res) => {
   }
 
   try {
-    const roles = auth["https://miappirest.com/roles"] || []; // Reemplaza con tu namespace
+    const roles = auth["https://miappirest.com/roles"] || []; 
     const esAdministrador = roles.includes("admin");
     const userInfoResponse = await axios.get(
       "https://dev-6tss1b7wf5huiury.us.auth0.com/userinfo",
@@ -24,7 +24,6 @@ export const crearOActualizarCliente = async (req, res) => {
       }
     );
     const userInfo = userInfoResponse.data;
-
 
     let cliente = await Cliente.findOne({ where: { auth0Id: auth.sub } });
     if (!cliente) {
@@ -70,6 +69,21 @@ export const obtenerClientes = async (req, res) => {
   } catch (error) {
     console.error("Error obteniendo los clientes:", error);
     res.status(500).json({ message: "Error obteniendo los clientes" });
+  }
+};
+export const obtenerCliente = async (req, res) => {
+  console.log(req.params)
+  const { id } = req.params;
+  try {
+    const cliente = await Cliente.findByPk(id);
+    if (cliente) {
+      res.status(200).json(cliente);
+    } else {
+      res.status(404).json({ message: "Cliente no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error obteniendo el cliente:", error);
+    res.status(500).json({ message: "Error obteniendo el cliente" });
   }
 };
 

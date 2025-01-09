@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 
 // Configuración de la base de datos
 const sequelize = new Sequelize(
-  "postgresql://restaurant_4q7p_user:o4I3Qv5eQfIgG1IYTitg1CCbE59GtIj8@dpg-ct1qvra3esus73d2hd1g-a.oregon-postgres.render.com/restaurant_4q7p",
+  "postgresql://restaurant_fk9u_user:N680EkpNCOXMAeT6vy8NrHLtUS7TCYT4@dpg-ctmnj2rv2p9s73fd9lp0-a.oregon-postgres.render.com/restaurant_fk9u",
   {
     dialect: "postgres",
     dialectOptions: {
@@ -11,7 +11,7 @@ const sequelize = new Sequelize(
         rejectUnauthorized: false,
       },
     },
-    logging: false,
+    logging: false, // Evita mostrar las consultas SQL en la consola
   }
 );
 
