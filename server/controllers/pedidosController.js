@@ -38,7 +38,7 @@ export const obtenerPedidosPorCliente = async (req, res) => {
     const pedidosPendientes = await Pedido.findAll({
       where: {
         clienteId,
-        estado: "pendiente", // Filtrar solo pedidos pendientes
+
       },
       order: [["fecha", "DESC"]],
     });
