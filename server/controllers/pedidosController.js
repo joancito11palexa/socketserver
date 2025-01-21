@@ -38,7 +38,6 @@ export const obtenerPedidosPorCliente = async (req, res) => {
     const pedidosPendientes = await Pedido.findAll({
       where: {
         clienteId,
-
       },
       order: [["fecha", "DESC"]],
     });
@@ -78,28 +77,28 @@ export const obtenerPedidosEntregados = async (req, res) => {
   }
 };
 
-
-export const crearPedido = async (req, res) => {
-  const { clienteId } = req.params; // Obtenemos el clienteId de los parámetros de la URL
-  const { entradas, platoPrincipal } = req.body; // Obtenemos los platos del cuerpo de la solicitud
-
+export const crearPedido = async (clienteId, entradas, platoPrincipal) => {
   try {
-    // Verificar si el cliente existe
     const cliente = await Cliente.findByPk(clienteId);
     if (!cliente) {
-      return res.status(404).json({ message: `Cliente con ID ${clienteId} no encontrado.` });
+      return res
+        .status(404)
+        .json({ message: `Cliente con ID ${clienteId} no encontrado.` });
     }
-
-    // Calcular el total del pedido
     const total =
-      entradas.reduce((acc, entrada) => acc + entrada.precio * entrada.cantidad, 0) +
-      platoPrincipal.reduce((acc, plato) => acc + plato.precio * plato.cantidad, 0);
+      entradas.reduce(
+        (acc, entrada) => acc + entrada.precio * entrada.cantidad,
+        0
+      ) +
+      platoPrincipal.reduce(
+        (acc, plato) => acc + plato.precio * plato.cantidad,
+        0
+      );
 
-    // Crear el pedido en la base de datos
     const nuevoPedido = await Pedido.create({
       descripcion: { entradas, platoPrincipal },
       total,
-      clienteId, // Asociamos el pedido al cliente
+      clienteId,
     });
 
     res.status(201).json({

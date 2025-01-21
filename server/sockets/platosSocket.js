@@ -7,13 +7,12 @@ import {
 export const conectarPlatosSocket = (io) => {
   io.on("connection", (socket) => {
     console.log("Cliente conectado");
-
     obtenerPlatos().then((platos) =>
       socket.emit("platos-actualizados", platos)
     );
-
     // Crear nuevo plato
-    socket.on("crear-plato", async (nuevoPlato) => {
+    io.on("crear-plato", async (nuevoPlato) => {
+      console.log("ansd")
       await crearPlato(nuevoPlato);
       const platos = await obtenerPlatos();
       io.emit("platos-actualizados", platos);
