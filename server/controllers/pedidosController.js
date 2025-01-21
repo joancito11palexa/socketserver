@@ -79,12 +79,13 @@ export const obtenerPedidosEntregados = async (req, res) => {
 
 export const crearPedido = async (clienteId, entradas, platoPrincipal) => {
   try {
+    // Buscar el cliente en la base de datos
     const cliente = await Cliente.findByPk(clienteId);
     if (!cliente) {
-      return res
-        .status(404)
-        .json({ message: `Cliente con ID ${clienteId} no encontrado.` });
+      throw new Error(`Cliente con ID ${clienteId} no encontrado.`);
     }
+
+    // Calcular el total del pedido
     const total =
       entradas.reduce(
         (acc, entrada) => acc + entrada.precio * entrada.cantidad,
@@ -95,22 +96,19 @@ export const crearPedido = async (clienteId, entradas, platoPrincipal) => {
         0
       );
 
+    // Crear el nuevo pedido
     const nuevoPedido = await Pedido.create({
       descripcion: { entradas, platoPrincipal },
       total,
       clienteId,
     });
 
-    res.status(201).json({
-      message: "Pedido creado exitosamente.",
-      pedido: nuevoPedido,
-    });
+    // Retornar el pedido creado
+    return nuevoPedido;
   } catch (error) {
+    // Lanzar el error para que quien llame a la función lo maneje
     console.error("Error al crear el pedido:", error);
-    res.status(500).json({
-      message: "Ocurrió un error al intentar crear el pedido.",
-      error: error.message,
-    });
+    throw error;
   }
 };
 

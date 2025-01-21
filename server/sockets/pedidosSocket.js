@@ -27,6 +27,7 @@ export const conectarPedidosSocket = (io) => {
     // });
 
     socket.on("nuevo-pedido", async (descripcion) => {
+      console.log("asdjifnpijsdfs")
       const { clienteId, entradas, platoPrincipal } = descripcion;
 
       try {
