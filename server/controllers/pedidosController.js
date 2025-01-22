@@ -98,9 +98,9 @@ export const crearPedido = async (descripcion) => {
       total,
       clienteId,
     });
+    console.log("crearpedidoController fINALIZADO")
     return nuevoPedido;
   } catch (error) {
-    // Lanzar el error para que quien llame a la función lo maneje
     console.error("Error al crear el pedido:", error);
     throw error;
   }

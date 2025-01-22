@@ -24,6 +24,7 @@ export const conectarPedidosSocket = (io) => {
         await crearPedido(descripcion);
         const pedidos = await obtenerPedidosSocket();
         io.emit("pedidos-actualizados", pedidos); // Actualizar a todos los clientes conectados
+        console.log("io.emit pedidos-actualizados EJECUTADO")
       } catch (error) {
         console.error("Error al procesar el pedido:", error.message);
         socket.emit("error-pedido", { message: error.message });
