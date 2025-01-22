@@ -12,7 +12,6 @@ export const conectarPlatosSocket = (io) => {
     );
     // Crear nuevo plato
     io.on("crear-plato", async (nuevoPlato) => {
-      console.log("ansd")
       await crearPlato(nuevoPlato);
       const platos = await obtenerPlatos();
       io.emit("platos-actualizados", platos);

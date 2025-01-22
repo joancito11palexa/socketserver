@@ -9,47 +9,28 @@ import {
 export const conectarPedidosSocket = (io) => {
   io.on("connection", async (socket) => {
     console.log("Cliente conectado");
+
     try {
+      // Enviar pedidos iniciales al cliente conectado
       const pedidos = await obtenerPedidosSocket();
       socket.emit("pedidos-actualizados", pedidos);
     } catch (error) {
       console.error("Error al enviar pedidos iniciales:", error.message);
     }
 
-    // socket.on("nuevo-pedido", async (descripcion) => {
-    //   try {
-    //     await crearPedido(descripcion);
-    //     const pedidos = await obtenerPedidosSocket();
-    //     io.emit("pedidos-actualizados", pedidos);
-    //   } catch (error) {
-    //     console.error("Error al crear pedido:", error.message);
-    //   }
-    // });
-
+    // Escuchar "nuevo-pedido" en el socket específico
     socket.on("nuevo-pedido", async (descripcion) => {
-      console.log("asdjifnpijsdfs")
-      const { clienteId, entradas, platoPrincipal } = descripcion;
-
       try {
-        const nuevoPedido = await crearPedido(
-          clienteId,
-          entradas,
-          platoPrincipal
-        );
-
-        // Emitir eventos a todos los clientes conectados
-        const pedidosActualizados = await Pedido.findAll({
-          order: [["fecha", "DESC"]],
-        });
-        io.emit("pedidos-actualizados", pedidosActualizados);
-
-        console.log(`Nuevo pedido creado: ${nuevoPedido.id}`);
+        await crearPedido(descripcion);
+        const pedidos = await obtenerPedidosSocket();
+        io.emit("pedidos-actualizados", pedidos); // Actualizar a todos los clientes conectados
       } catch (error) {
-        console.error("Error al procesar el pedido:", error);
+        console.error("Error al procesar el pedido:", error.message);
         socket.emit("error-pedido", { message: error.message });
       }
     });
 
+    // Escuchar "eliminar-pedido" en el socket específico
     socket.on("eliminar-pedido", async (id) => {
       try {
         await eliminarPedido(id);
@@ -60,6 +41,7 @@ export const conectarPedidosSocket = (io) => {
       }
     });
 
+    // Escuchar "marcar-entregado" en el socket específico
     socket.on("marcar-entregado", async (id) => {
       try {
         await marcarComoEntregado(id);
@@ -70,6 +52,7 @@ export const conectarPedidosSocket = (io) => {
       }
     });
 
+    // Manejar la desconexión del cliente
     socket.on("disconnect", () => {
       console.log("Cliente desconectado");
     });

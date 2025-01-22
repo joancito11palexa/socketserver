@@ -77,15 +77,13 @@ export const obtenerPedidosEntregados = async (req, res) => {
   }
 };
 
-export const crearPedido = async (clienteId, entradas, platoPrincipal) => {
+export const crearPedido = async (descripcion) => {
+  const { clienteId, entradas, platoPrincipal } = descripcion;
   try {
-    // Buscar el cliente en la base de datos
     const cliente = await Cliente.findByPk(clienteId);
     if (!cliente) {
       throw new Error(`Cliente con ID ${clienteId} no encontrado.`);
     }
-
-    // Calcular el total del pedido
     const total =
       entradas.reduce(
         (acc, entrada) => acc + entrada.precio * entrada.cantidad,
@@ -95,15 +93,11 @@ export const crearPedido = async (clienteId, entradas, platoPrincipal) => {
         (acc, plato) => acc + plato.precio * plato.cantidad,
         0
       );
-
-    // Crear el nuevo pedido
     const nuevoPedido = await Pedido.create({
       descripcion: { entradas, platoPrincipal },
       total,
       clienteId,
     });
-
-    // Retornar el pedido creado
     return nuevoPedido;
   } catch (error) {
     // Lanzar el error para que quien llame a la función lo maneje
