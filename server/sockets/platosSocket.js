@@ -1,31 +1,25 @@
-import {
-  obtenerPlatos,
-  crearPlato,
-  eliminarPlato,
-} from "../controllers/platosController.js";
+import { obtenerPlatos, crearPlato, eliminarPlato } from "../controllers/platosController.js";
 
-export const conectarPlatosSocket = (io) => {
-  io.on("connection", (socket) => {
-    console.log("Cliente conectado");
-    obtenerPlatos().then((platos) =>
-      socket.emit("platos-actualizados", platos)
-    );
-    // Crear nuevo plato
-    io.on("crear-plato", async (nuevoPlato) => {
+export const conectarPlatosSocket = (io, socket) => {
+  obtenerPlatos().then((platos) => socket.emit("platos-actualizados", platos));
+
+  socket.on("crear-plato", async (nuevoPlato) => {
+    try {
       await crearPlato(nuevoPlato);
       const platos = await obtenerPlatos();
       io.emit("platos-actualizados", platos);
-    });
+    } catch (error) {
+      console.error("Error al crear plato:", error.message);
+    }
+  });
 
-    // Eliminar un plato
-    socket.on("eliminar-plato", async (id) => {
+  socket.on("eliminar-plato", async (id) => {
+    try {
       await eliminarPlato(id);
       const platos = await obtenerPlatos();
       io.emit("platos-actualizados", platos);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Cliente desconectado");
-    });
+    } catch (error) {
+      console.error("Error al eliminar plato:", error.message);
+    }
   });
 };

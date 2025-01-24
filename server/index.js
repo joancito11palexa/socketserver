@@ -15,22 +15,18 @@ import routerPedidos from "./routes/pedidosRoutes.js";
 const app = express();
 app.use(express.json());
 const server = http.createServer(app);
-
 const corsOptions = {
   origin: [
     "http://localhost:5173", // Dominio de desarrollo (Vite)
     "https://restaurantproject1632.netlify.app", // Dominio de producción
     "https://restaurantapp2004.onrender.com",
     "http://192.168.0.109:5173",
-
   ],
   methods: ["GET", "POST"],
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
-
 const io = new SocketServer(server, {
   cors: {
     origin: [
@@ -38,7 +34,6 @@ const io = new SocketServer(server, {
       "https://restaurantproject1632.netlify.app", // Dominio de producción
       "https://restaurantapp2004.onrender.com",
       "http://192.168.0.109:5173",
-
     ],
     methods: ["GET", "POST"],
     credentials: true,
@@ -83,19 +78,22 @@ sequelize
   });
 
 sequelize
-  .sync({ force: false }) // Usar `force: true` borrará y recreará todas las tablas
+  .sync({ force: false })
   .then(() => {
     console.log("Tablas sincronizadas correctamente (force: false).");
   })
   .catch((err) => {
     console.error("Error al sincronizar las tablas:", err);
   });
-
-conectarPedidosSocket(io);
-conectarPlatosSocket(io);
-
+io.on("connection", (socket) => {
+  console.log("Cliente conectado");
+  conectarPedidosSocket(io, socket);
+  conectarPlatosSocket(io, socket);
+  socket.on("disconnect", () => {
+    console.log("Cliente desconectado");
+  });
+});
 app.use("/api", clienteRoutes, routerPedidos);
-
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {

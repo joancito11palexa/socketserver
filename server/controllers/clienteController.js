@@ -13,7 +13,7 @@ export const crearOActualizarCliente = async (req, res) => {
   }
 
   try {
-    const roles = auth["https://miappirest.com/roles"] || []; 
+    const roles = auth["https://miappirest.com/roles"] || [];
     const esAdministrador = roles.includes("admin");
     const userInfoResponse = await axios.get(
       "https://dev-6tss1b7wf5huiury.us.auth0.com/userinfo",
@@ -28,29 +28,39 @@ export const crearOActualizarCliente = async (req, res) => {
     let cliente = await Cliente.findOne({ where: { auth0Id: auth.sub } });
     if (!cliente) {
       cliente = await Cliente.create({
-        nombre: userInfo.name || "Usuario", // Prioriza el nombre desde userInfo
-        email: userInfo.email || "", // Prioriza el email desde userInfo
-        password: "", // Campo vacío porque Auth0 maneja autenticación
-        esAdministrador: esAdministrador, // Asignar si es administrador
+        nombre: userInfo.given_name || "Usuario",
+        apellidos: userInfo.family_name || "",
+        email: userInfo.email || "",
+        password: "",
+        esAdministrador: esAdministrador,
         auth0Id: auth.sub,
-        nickname: userInfo.nickname || "", // Agregamos nickname del usuario
+        nickname: userInfo.nickname || "",
         picture: userInfo.picture || "",
       });
     } else {
-      // Actualizamos información existente del cliente si cambia en Auth0
-      cliente.nombre = userInfo.name || cliente.nombre;
+      (cliente.nombre = userInfo.given_name || cliente.nombre),
+        (cliente.apellidos = userInfo.family_name || cliente.apellidos);
       cliente.email = userInfo.email || cliente.email;
       cliente.nickname = userInfo.nickname || cliente.nickname;
       cliente.picture = userInfo.picture || cliente.picture;
-      cliente.esAdministrador = esAdministrador; // Actualizar el rol en base al token
+      cliente.esAdministrador = esAdministrador;
       await cliente.save();
     }
-
-    // Respondemos con los datos del cliente
-
+    const a = {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      apellidos: cliente.apellidos,
+      email: cliente.email,
+      nickname: cliente.nickname,
+      picture: cliente.picture,
+      esAdministrador: cliente.esAdministrador,
+    };
+    console.log(a);
+    console.log("actualizado")
     res.json({
       id: cliente.id,
       nombre: cliente.nombre,
+      apellidos: cliente.apellidos,
       email: cliente.email,
       nickname: cliente.nickname,
       picture: cliente.picture,
@@ -72,7 +82,6 @@ export const obtenerClientes = async (req, res) => {
   }
 };
 export const obtenerCliente = async (req, res) => {
-  console.log(req.params)
   const { id } = req.params;
   try {
     const cliente = await Cliente.findByPk(id);
