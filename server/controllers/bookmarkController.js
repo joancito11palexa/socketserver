@@ -28,8 +28,8 @@ export const getAllBookmarks = async (req, res) => {
 
 // Eliminar un marcador por ID
 export const deleteBookmark = async (req, res) => {
-  const { id } = req.body;
-  console.log(id)
+  const { id } = req.params;
+
   try {
     const marcador = await Bookmark.destroy({ where: { id } });
     if (marcador) {
