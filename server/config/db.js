@@ -1,18 +1,16 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from "sequelize";
 
-// Configuración de la base de datos
-const sequelize = new Sequelize(
-  "postgresql://restaurant_fk9u_user:N680EkpNCOXMAeT6vy8NrHLtUS7TCYT4@dpg-ctmnj2rv2p9s73fd9lp0-a.oregon-postgres.render.com/restaurant_fk9u",
-  {
-    dialect: "postgres",
-    dialectOptions: {
+
+// Configurar Sequelize
+const sequelize = new Sequelize('postgresql://restaurantt_user:Z6BAnZvbILnuQFaZ4G0v0tw6Zxqtb2DU@dpg-cud3b7hopnds73aovaqg-a.oregon-postgres.render.com/restaurantt', {
+  dialect: 'postgres',
+  dialectOptions: {
       ssl: {
-        require: true,
-        rejectUnauthorized: false,
+          require: true,
+          rejectUnauthorized: false,
       },
-    },
-    logging: false, // Evita mostrar las consultas SQL en la consola
-  }
-);
+  },
+  logging: false,
+});
 
 export default sequelize;

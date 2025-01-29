@@ -8,6 +8,7 @@ import { conectarPedidosSocket } from "./sockets/pedidosSocket.js";
 import { conectarPlatosSocket } from "./sockets/platosSocket.js";
 import apiSisapRoute from "./routes/apiSisapRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
+import boomarksRoutes from "./routes/bookmarksRoutes.js";
 
 import { Cliente } from "./models/Cliente.js"; // Asegúrate de importar el modelo Cliente
 import routerPedidos from "./routes/pedidosRoutes.js";
@@ -93,7 +94,7 @@ io.on("connection", (socket) => {
     console.log("Cliente desconectado");
   });
 });
-app.use("/api", clienteRoutes, routerPedidos);
+app.use("/api", clienteRoutes, routerPedidos, boomarksRoutes);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
