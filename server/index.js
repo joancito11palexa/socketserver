@@ -14,7 +14,8 @@ import { Cliente } from "./models/Cliente.js"; // Asegúrate de importar el mode
 import routerPedidos from "./routes/pedidosRoutes.js";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+
 const server = http.createServer(app);
 const corsOptions = {
   origin: [
@@ -95,6 +96,7 @@ io.on("connection", (socket) => {
   });
 });
 app.use("/api", clienteRoutes, routerPedidos, boomarksRoutes);
+
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
