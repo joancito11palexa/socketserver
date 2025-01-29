@@ -2,24 +2,19 @@ import { DataTypes } from 'sequelize';
 import sequelize from "../config/db.js";
 
 // Definir el modelo de Bookmark
-const Bookmarks = sequelize.define('Bookmarks', {
+const Bookmarks = sequelize.define('Bookmark', {
     url: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            isUrl: true,
-        }
+      type: DataTypes.STRING,
+      allowNull: false
     },
     titulo: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false
     },
     imagen: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      type: DataTypes.TEXT,  // Aquí usamos TEXT para almacenar la imagen en Base64
+      allowNull: false
     }
-}, {
-    timestamps: true, // Si deseas registrar fecha de creación y actualización
-});
+  });
 
-export default Bookmarks
+export default Bookmarks;
