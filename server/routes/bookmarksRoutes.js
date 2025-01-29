@@ -9,6 +9,6 @@ const router = express.Router();
 // Rutas de los marcadores
 router.post("/bookmarks/guardar", createBookmark);
 router.get("/bookmarks/obtener", getAllBookmarks);
-router.post("/bookmarks/eliminar", deleteBookmark);
+router.delete("/bookmarks/eliminar", deleteBookmark);
 
 export default router;
