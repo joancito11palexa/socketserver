@@ -19,11 +19,13 @@ app.use(express.json({ limit: "50mb" }));
 const server = http.createServer(app);
 const corsOptions = {
   origin: [
+    "https://snappit-gbom62x66-joan2022laurentes-projects.vercel.app/",
     "http://localhost:3000",
     "http://localhost:5173", // Dominio de desarrollo (Vite)
     "https://restaurantproject1632.netlify.app", // Dominio de producción
     "https://restaurantapp2004.onrender.com",
     "http://192.168.0.109:5173",
+    "http://192.168.0.109:3000",
   ],
   methods: ["GET", "POST", "DELETE"],
   credentials: true,
@@ -33,11 +35,13 @@ app.use(morgan("dev"));
 const io = new SocketServer(server, {
   cors: {
     origin: [
+      "https://snappit-gbom62x66-joan2022laurentes-projects.vercel.app/",
       "http://localhost:3000",
       "http://localhost:5173", // Dominio de desarrollo (Vite)
       "https://restaurantproject1632.netlify.app", // Dominio de producción
       "https://restaurantapp2004.onrender.com",
       "http://192.168.0.109:5173",
+      "http://192.168.0.109:3000",
     ],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
