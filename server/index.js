@@ -26,7 +26,6 @@ const corsOptions = {
     "https://restaurantproject1632.netlify.app", // Dominio de producción
     "https://restaurantapp2004.onrender.com",
     "http://192.168.0.109:5173",
-    "http://192.168.0.109:3000",
   ],
   methods: ["GET", "POST", "DELETE"],
   credentials: true,
@@ -43,7 +42,6 @@ const io = new SocketServer(server, {
       "https://restaurantproject1632.netlify.app", // Dominio de producción
       "https://restaurantapp2004.onrender.com",
       "http://192.168.0.109:5173",
-      "http://192.168.0.109:3000",
     ],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
