@@ -16,7 +16,7 @@ const Bookmarks = sequelize.define('Bookmark', {
       allowNull: false
     },
     // tags : {
-    //     type: DataTypes.ARRAY,
+    //     type: DataTypes.ARRAY,aaaa
     //     allowNull: true
     // }
 
