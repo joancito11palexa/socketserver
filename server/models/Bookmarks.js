@@ -14,7 +14,13 @@ const Bookmarks = sequelize.define('Bookmark', {
     imagen: {
       type: DataTypes.TEXT,  // Aquí usamos TEXT para almacenar la imagen en Base64
       allowNull: false
-    }
+    },
+    // tags : {
+    //     type: DataTypes.ARRAY,
+    //     allowNull: true
+    // }
+
+    //SDJFDNF
   });
 
 export default Bookmarks;
