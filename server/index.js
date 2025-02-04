@@ -86,7 +86,7 @@ sequelize
   });
 
 sequelize
-  .sync({ force: false })
+  .sync({ force: true })
   .then(() => {
     console.log("Tablas sincronizadas correctamente (force: false).");
   })
