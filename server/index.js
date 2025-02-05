@@ -27,7 +27,7 @@ const corsOptions = {
     "https://restaurantapp2004.onrender.com",
     "http://192.168.0.109:5173",
   ],
-  methods: ["GET", "POST", "DELETE"],
+  methods: ["GET", "POST", "DELETE", "PUT"],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -43,7 +43,7 @@ const io = new SocketServer(server, {
       "https://restaurantapp2004.onrender.com",
       "http://192.168.0.109:5173",
     ],
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   },
 });
