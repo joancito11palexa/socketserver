@@ -72,3 +72,33 @@ export const deleteBookmark = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el marcador" });
   }
 };
+
+
+export const exportBookmarksToSQL = async (req, res) => {
+  try {
+    const bookmarks = await Bookmark.findAll();
+
+    if (bookmarks.length === 0) {
+      return res.status(404).json({ error: "No hay marcadores para exportar" });
+    }
+
+    let sqlStatements = `INSERT INTO "Bookmarks" (url, titulo, imagen, tags, nota) VALUES\n`;
+
+    sqlStatements += bookmarks
+      .map((b) => {
+        const tags = b.tags ? `'{"${b.tags.join('","')}"}'` : "NULL";
+        const nota = b.nota ? `'${b.nota.replace(/'/g, "''")}'` : "NULL";
+        return `('${b.url}', '${b.titulo.replace(/'/g, "''")}', '${b.imagen}', ${tags}, ${nota})`;
+      })
+      .join(",\n") + ";";
+
+    // Configurar cabeceras para descargar el archivo
+    res.setHeader("Content-Disposition", "attachment; filename=bookmarks.sql");
+    res.setHeader("Content-Type", "application/sql");
+
+    res.send(sqlStatements);
+  } catch (error) {
+    console.error("Error al exportar los marcadores:", error);
+    res.status(500).json({ error: "Error al exportar los marcadores" });
+  }
+};
