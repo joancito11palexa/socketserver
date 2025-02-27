@@ -73,6 +73,25 @@ export const deleteBookmark = async (req, res) => {
   }
 };
 
+export const getTags = async (req, res) => {
+  try {
+    // Obtener solo la columna "tags" de todos los bookmarks
+    const bookmarks = await Bookmark.findAll({ attributes: ["tags"] });
+
+    // Extraer todas las tags en un solo array
+    const allTags = bookmarks.flatMap(b => b.tags || []); // Evita `null`
+
+    // Eliminar duplicados
+    const uniqueTags = [...new Set(allTags)];
+
+    res.status(200).json({ tags: uniqueTags });
+  } catch (error) {
+    console.error("Error al obtener las tags:", error);
+    res.status(500).json({ error: "Error al obtener las tags" });
+  }
+};
+
+
 
 export const exportBookmarksToSQL = async (req, res) => {
   try {
